@@ -1,0 +1,16 @@
+# Build outputs
+build/
+out/
+target/
+
+# JVM artifacts
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
