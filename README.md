@@ -1,5 +1,7 @@
 # Box Search
 
+[English](README.md) | [日本語](README.ja.md)
+
 Box Search is a Core Keeper mod project focused on one goal: quickly finding where an item is stored across your boxes.
 
 ## Stack
