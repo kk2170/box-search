@@ -22,14 +22,15 @@ Initial implementation is now in place:
 - BepInEx/Harmony C# project scaffold added under `src/BoxSearch`
 - In-memory storage snapshot and item-name search services added
 - Minimal in-game IMGUI search overlay added
-- Debug sample-data hotkey added so the UI/search loop can be exercised before a real Core Keeper container hook is wired
+- Live Core Keeper container observation hooks added through the in-game chest UI
+- Debug sample-data hotkey kept as an optional testing path
 
 ## Planned Features
 
 - Search item names across all discovered storage containers
 - Show matching chest location and item count
 - Fast in-game lookup flow with minimal UI friction
-- Wire the observation layer to real Core Keeper storage/container events
+- Validate container identifiers and location hints against real gameplay
 
 ## Development
 
@@ -58,6 +59,7 @@ Current runtime controls:
 
 - `Ctrl+F`: toggle the search overlay
 - `Esc`: close the search overlay
+- Real container indexing: open a storage container to refresh its snapshot in Box Search
 - Optional debug path: enable `Debug/EnableDebugSampleHotkey` in the BepInEx config, then press `F8` to seed sample container data
 
 ## License

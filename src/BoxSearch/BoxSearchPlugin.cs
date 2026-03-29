@@ -19,6 +19,7 @@ public sealed class BoxSearchPlugin : BaseUnityPlugin
     private Harmony? harmony;
     private StorageObservationCoordinator? observationCoordinator;
     private SearchOverlayController? overlayController;
+    private CoreKeeperStorageHooks? liveStorageHooks;
     private ConfigEntry<KeyboardShortcut>? toggleOverlayHotkey;
     private ConfigEntry<bool>? enableDebugSampleHotkey;
     private ConfigEntry<KeyboardShortcut>? seedDebugDataHotkey;
@@ -31,6 +32,7 @@ public sealed class BoxSearchPlugin : BaseUnityPlugin
 
         observationCoordinator = new StorageObservationCoordinator(registry, snapshotService, Logger);
         overlayController = new SearchOverlayController(searchService, registry);
+        liveStorageHooks = new CoreKeeperStorageHooks(observationCoordinator, overlayController, Logger);
 
         toggleOverlayHotkey = Config.Bind(
             "Input",
@@ -42,7 +44,7 @@ public sealed class BoxSearchPlugin : BaseUnityPlugin
             "Debug",
             "EnableDebugSampleHotkey",
             false,
-            "Allows sample data to be injected before a real Core Keeper container hook is wired in.");
+            "Allows sample container data to be injected alongside live Core Keeper observations.");
 
         seedDebugDataHotkey = Config.Bind(
             "Debug",
@@ -52,6 +54,7 @@ public sealed class BoxSearchPlugin : BaseUnityPlugin
 
         harmony = new Harmony(PluginGuid);
         harmony.PatchAll();
+        liveStorageHooks.Install(harmony);
 
         Logger.LogInfo($"{PluginName} loaded. Toggle overlay with {toggleOverlayHotkey.Value}.");
     }
@@ -62,6 +65,8 @@ public sealed class BoxSearchPlugin : BaseUnityPlugin
         {
             return;
         }
+
+        liveStorageHooks?.Update();
 
         if (toggleOverlayHotkey.Value.IsDown())
         {
