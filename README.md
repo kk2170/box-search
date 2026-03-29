@@ -37,8 +37,22 @@ This repository starts as a clean foundation. The implementation follows the rul
 
 Build setup:
 
+- Install the .NET 8 SDK.
 - Copy `Config.Build.user.props.template` to `Config.Build.user.props` when your Core Keeper install path is not the default Steam location.
 - The build expects the game at `Core Keeper/` and deploys the compiled DLL to `BepInEx/plugins/`.
+- A build also needs a valid `BepInEx/core/` directory. That can come from your local game install or from a downloaded BepInEx release.
+- NuGet feeds for BepInEx-related packages are declared in `NuGet.config`.
+
+Local build commands:
+
+- Default install path: `dotnet build src/BoxSearch/BoxSearch.csproj`
+- Custom Core Keeper path: `dotnet build src/BoxSearch/BoxSearch.csproj -p:CoreKeeperGameRootDir="/path/to/Core Keeper/"`
+- Build against a downloaded BepInEx package: `dotnet build src/BoxSearch/BoxSearch.csproj -p:CoreKeeperBepInExCoreDir="/path/to/BepInEx/core/"`
+
+CI:
+
+- GitHub Actions builds the project on pushes, pull requests, and manual runs.
+- The workflow downloads `BepInEx_unix_5.4.21.0.zip` and points the build at its extracted `BepInEx/core/` directory.
 
 Current runtime controls:
 

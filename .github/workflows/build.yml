@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+      BEPINEX_VERSION: 5.4.21
+      BEPINEX_ARCHIVE: BepInEx_unix_5.4.21.0.zip
+      BEPINEX_ROOT: ${{ github.workspace }}/.deps/bepinex
+      PLUGINS_DIR: ${{ github.workspace }}/artifacts/plugins
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Download BepInEx references
+        run: |
+          mkdir -p "$BEPINEX_ROOT"
+          curl -fsSL "https://github.com/BepInEx/BepInEx/releases/download/v${BEPINEX_VERSION}/${BEPINEX_ARCHIVE}" -o "$RUNNER_TEMP/bepinex.zip"
+          unzip -q "$RUNNER_TEMP/bepinex.zip" -d "$BEPINEX_ROOT"
+
+      - name: Prepare plugin output directory
+        run: mkdir -p "$PLUGINS_DIR"
+
+      - name: Restore
+        run: >-
+          dotnet restore src/BoxSearch/BoxSearch.csproj
+          -p:CoreKeeperBepInExCoreDir="$BEPINEX_ROOT/BepInEx/core/"
+          -p:CoreKeeperPluginsDir="$PLUGINS_DIR/"
+
+      - name: Build
+        run: >-
+          dotnet build src/BoxSearch/BoxSearch.csproj
+          --configuration Release
+          --no-restore
+          -p:CoreKeeperBepInExCoreDir="$BEPINEX_ROOT/BepInEx/core/"
+          -p:CoreKeeperPluginsDir="$PLUGINS_DIR/"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: box-search-build
+          path: |
+            artifacts/
+            ${{ env.PLUGINS_DIR }}/

@@ -1,15 +1,22 @@
 <Project>
+  <PropertyGroup>
+    <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+  </PropertyGroup>
+
   <Import
-    Project="$(SolutionRoot)Config.Build.user.props"
-    Condition="Exists('$(SolutionRoot)Config.Build.user.props')" />
+    Project="$(MSBuildThisFileDirectory)Config.Build.user.props"
+    Condition="Exists('$(MSBuildThisFileDirectory)Config.Build.user.props')" />
 
   <PropertyGroup>
+    <RestoreAdditionalProjectSources>
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.windows10ce.com/nuget/v3/index.json
+    </RestoreAdditionalProjectSources>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
-    <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -28,4 +35,26 @@
     <CoreKeeperBepInExCoreDir Condition="'$(CoreKeeperBepInExCoreDir)' == ''">$(CoreKeeperGameRootDir)BepInEx/core/</CoreKeeperBepInExCoreDir>
     <CoreKeeperPluginsDir Condition="'$(CoreKeeperPluginsDir)' == ''">$(CoreKeeperGameRootDir)BepInEx/plugins/</CoreKeeperPluginsDir>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('$(CoreKeeperManagedDir)')">
+    <PackageReference Include="UnityEngine.Modules" Version="6000.0.36" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.IMGUIModule" Version="6000.0.36" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.InputLegacyModule" Version="6000.0.36" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(CoreKeeperManagedDir)')">
+    <LocalReferences
+      Include="$(CoreKeeperManagedDir)*.dll"
+      Exclude="$(CoreKeeperManagedDir)Mono*.dll;$(CoreKeeperManagedDir)netstandard.dll;$(CoreKeeperManagedDir)System*.dll;$(CoreKeeperManagedDir)mscorlib.dll" />
+    <Reference Include="@(LocalReferences)" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(CoreKeeperBepInExCoreDir)')">
+    <Reference Include="$(CoreKeeperBepInExCoreDir)*.dll" Private="false" />
+  </ItemGroup>
 </Project>

@@ -37,8 +37,22 @@ Box Search は、アイテムがどの箱に入っているかを素早く見つ
 
 ビルド設定:
 
+- .NET 8 SDK をインストールしてください。
 - Core Keeper のインストール先が既定の Steam パスではない場合は、`Config.Build.user.props.template` を `Config.Build.user.props` としてコピーして設定してください。
 - ビルドは `Core Keeper/` 配下を想定し、生成した DLL を `BepInEx/plugins/` に配置します。
+- ビルドには有効な `BepInEx/core/` ディレクトリも必要です。これはローカルのゲーム環境からでも、別途ダウンロードした BepInEx 配布物からでも構いません。
+- BepInEx 関連パッケージ用の NuGet フィードは `NuGet.config` に定義しています。
+
+ローカルビルド例:
+
+- 既定のインストール先を使う場合: `dotnet build src/BoxSearch/BoxSearch.csproj`
+- Core Keeper の場所を明示する場合: `dotnet build src/BoxSearch/BoxSearch.csproj -p:CoreKeeperGameRootDir="/path/to/Core Keeper/"`
+- ダウンロードした BepInEx 配布物を使う場合: `dotnet build src/BoxSearch/BoxSearch.csproj -p:CoreKeeperBepInExCoreDir="/path/to/BepInEx/core/"`
+
+CI:
+
+- GitHub Actions で push、pull request、手動実行時にビルドします。
+- ワークフローでは `BepInEx_unix_5.4.21.0.zip` をダウンロードし、展開した `BepInEx/core/` を参照してビルドします。
 
 現在のランタイム操作:
 

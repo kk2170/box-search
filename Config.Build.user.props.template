@@ -3,6 +3,9 @@
     <!-- Set this if Steam or the game is installed in a non-default location. -->
     <!-- <CoreKeeperGameRootDir>/path/to/Core Keeper/</CoreKeeperGameRootDir> -->
 
+    <!-- Set this if you want to build against a downloaded BepInEx package instead of a game install. -->
+    <!-- <CoreKeeperBepInExCoreDir>/path/to/BepInEx/core/</CoreKeeperBepInExCoreDir> -->
+
     <!-- Override this if you want the built DLL copied elsewhere. -->
     <!-- <CoreKeeperPluginsDir>/path/to/Core Keeper/BepInEx/plugins/</CoreKeeperPluginsDir> -->
   </PropertyGroup>
