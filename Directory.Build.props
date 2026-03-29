@@ -53,6 +53,9 @@
   </ItemGroup>
 
   <ItemGroup Condition="Exists('$(CoreKeeperBepInExCoreDir)')">
-    <Reference Include="$(CoreKeeperBepInExCoreDir)*.dll" Private="false" />
+    <Reference
+      Include="$(CoreKeeperBepInExCoreDir)*.dll"
+      Exclude="$(CoreKeeperBepInExCoreDir)0Harmony20.dll"
+      Private="false" />
   </ItemGroup>
 </Project>
