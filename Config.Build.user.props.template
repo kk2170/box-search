@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Set this if Steam or the game is installed in a non-default location. -->
+    <!-- <CoreKeeperGameRootDir>/path/to/Core Keeper/</CoreKeeperGameRootDir> -->
+
+    <!-- Override this if you want the built DLL copied elsewhere. -->
+    <!-- <CoreKeeperPluginsDir>/path/to/Core Keeper/BepInEx/plugins/</CoreKeeperPluginsDir> -->
+  </PropertyGroup>
+</Project>

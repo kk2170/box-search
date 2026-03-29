@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <RestoreAdditionalProjectSources>
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.windows10ce.com/nuget/v3/index.json
+    </RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+    <PackageReference Include="HarmonyX" Version="2.16.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!Exists('$(CoreKeeperManagedDir)')">
+    <PackageReference Include="UnityEngine.Modules" Version="6000.0.36" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.IMGUIModule" Version="6000.0.36" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.InputLegacyModule" Version="6000.0.36" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(CoreKeeperManagedDir)')">
+    <LocalReferences
+      Include="$(CoreKeeperManagedDir)*.dll"
+      Exclude="$(CoreKeeperManagedDir)Mono*.dll;$(CoreKeeperManagedDir)netstandard.dll;$(CoreKeeperManagedDir)System*.dll;$(CoreKeeperManagedDir)mscorlib.dll" />
+    <Reference Include="@(LocalReferences)" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(CoreKeeperBepInExCoreDir)')">
+    <Reference Include="$(CoreKeeperBepInExCoreDir)*.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="DeployFiles" AfterTargets="Build" Condition="Exists('$(CoreKeeperPluginsDir)')">
+    <Message Text="Deploy -> $(CoreKeeperPluginsDir)$(AssemblyName).dll" Importance="High" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(CoreKeeperPluginsDir)" />
+  </Target>
+
+  <Target Name="WarnMissingDeployPath" AfterTargets="Build" Condition="!Exists('$(CoreKeeperPluginsDir)')">
+    <Message
+      Text="Skip deploy because '$(CoreKeeperPluginsDir)' does not exist. Configure CoreKeeperPluginsDir in Config.Build.user.props when you want automatic DLL copy."
+      Importance="High" />
+  </Target>
+</Project>

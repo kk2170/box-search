@@ -2,6 +2,9 @@
 build/
 out/
 target/
+artifacts/
+bin/
+obj/
 
 # JVM artifacts
 *.class
@@ -10,7 +13,11 @@ target/
 .idea/
 .vscode/
 *.iml
+*.user
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local build configuration
+Config.Build.user.props

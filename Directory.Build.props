@@ -1,0 +1,31 @@
+<Project>
+  <Import
+    Project="$(SolutionRoot)Config.Build.user.props"
+    Condition="Exists('$(SolutionRoot)Config.Build.user.props')" />
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UnixSteamRootPrimary>$(HOME)/.local/share/Steam/steamapps/common/</UnixSteamRootPrimary>
+    <UnixSteamRootFallback>$(HOME)/.steam/steam/steamapps/common/</UnixSteamRootFallback>
+    <SteamCommonDir Condition="'$([MSBuild]::IsOSUnixLike())' == 'true' and Exists('$(UnixSteamRootPrimary)')">$(UnixSteamRootPrimary)</SteamCommonDir>
+    <SteamCommonDir Condition="'$([MSBuild]::IsOSUnixLike())' == 'true' and '$(SteamCommonDir)' == ''">$(UnixSteamRootFallback)</SteamCommonDir>
+    <SteamCommonDir Condition="'$([MSBuild]::IsOSUnixLike())' != 'true'">$(MSBuildProgramFiles32)/Steam/steamapps/common/</SteamCommonDir>
+
+    <CoreKeeperGameRootDir Condition="'$(CoreKeeperGameRootDir)' == ''">$(SteamCommonDir)Core Keeper/</CoreKeeperGameRootDir>
+    <CoreKeeperManagedDir Condition="'$(CoreKeeperManagedDir)' == ''">$(CoreKeeperGameRootDir)Core Keeper_Data/Managed/</CoreKeeperManagedDir>
+    <CoreKeeperBepInExCoreDir Condition="'$(CoreKeeperBepInExCoreDir)' == ''">$(CoreKeeperGameRootDir)BepInEx/core/</CoreKeeperBepInExCoreDir>
+    <CoreKeeperPluginsDir Condition="'$(CoreKeeperPluginsDir)' == ''">$(CoreKeeperGameRootDir)BepInEx/plugins/</CoreKeeperPluginsDir>
+  </PropertyGroup>
+</Project>
